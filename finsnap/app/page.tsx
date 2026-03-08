@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Header from '../components/finance/Header'
-import PageWrapper from '../components/PageWrapper'
+import { PageWrapper } from '../components/finance/PageWrapper'
 
 type View = 'dashboard' | 'add' | 'budgets';
 
@@ -11,6 +11,23 @@ const Page = () => {
   return (
     <main>
       <Header view={view} onNavigate={setView} />
+
+      {view == "dashboard" && (
+        <PageWrapper>
+          <p>Dashboard is coming soon</p>
+        </PageWrapper>
+      )}
+      {view == "add" && (
+        <PageWrapper>
+          <p>Add transaction coming soon</p>
+        </PageWrapper>
+      )}
+      {view == "budgets" && (
+        <PageWrapper>
+          <p>Budget is coming soon</p>
+        </PageWrapper>
+      )}
+
     </main>
   )
 }
