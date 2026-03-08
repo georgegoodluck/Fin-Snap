@@ -16,4 +16,4 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](https://finsnap-ten.vercel.app/).
+Open [FinSnal](https://finsnap-ten.vercel.app/).
