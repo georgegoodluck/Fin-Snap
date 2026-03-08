@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Header from '../components/finance/Header';
 import { PageWrapper } from '../components/finance/PageWrapper';
 import { StatsRow } from "@/components/finance/StatsRow";
+import { SpendingCard } from "@/components/finance/SpendingCard";
 
 type View = 'dashboard' | 'add' | 'budgets';
 
@@ -15,7 +16,7 @@ const Page = () => {
 
       {view == "dashboard" && (
         <PageWrapper>
-               <StatsRow
+          <StatsRow
             income={5000}
             expenses={1735}
             savings={3265}
@@ -23,20 +24,28 @@ const Page = () => {
             incomeCount={2}
             expenseCount={7}
           />
-          <p>Dashboard is coming</p>
-          </PageWrapper>
+        </PageWrapper>
       )}
       {view == "add" && (
         <PageWrapper>
-          <p>Add transaction coming soon</p>
-          </PageWrapper>
+          <SpendingCard
+            categorySpend={{
+              housing: 1400,
+              food: 205,
+              transport: 55,
+              health: 30,
+              entertainment: 45,
+            }}
+            total={1735}
+          />
+        </PageWrapper>
       )}
       {view == "budgets" && (
         <PageWrapper>
           <p>Budget is coming</p>
-          </PageWrapper>
+        </PageWrapper>
       )}
-      
+
     </main>
   )
 }
