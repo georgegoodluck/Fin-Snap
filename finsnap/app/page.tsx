@@ -1,9 +1,10 @@
 import React from 'react'
+import Header from '../components/finance/Header'
 
 const page = () => {
   return (
     <div>
-      <h1>FinSnap</h1>
+      <Header />
     </div>
   )
 }
