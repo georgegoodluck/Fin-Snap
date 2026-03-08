@@ -7,9 +7,12 @@ import { StatsRow } from "@/components/finance/StatsRow";
 import { SpendingCard } from "@/components/finance/SpendingCard";
 import { BudgetHealthCard } from "@/components/finance/BudgetHealthCard";
 import { TransactionList } from "@/components/finance/TransactionList";
+import { AddTransactionForm } from "@/components/finance/AddTransactionForm";
+import { BudgetManager } from "@/components/finance/BudgetManager";
 import { CATEGORIES, DEFAULT_BUDGETS } from "@/lib/constants";
 import type { CategorySummary, Transaction } from "@/types/finance";
-import { AddTransactionForm } from "@/components/finance/AddTransactionForm";
+
+// ── Mock data (replaced in Step 9) ──────────────────────────────────────────
 
 const mockTransactions: Transaction[] = [
   { id: "1", type: "income", category: null, amount: 4200, description: "Salary", date: "2026-03-01" },
@@ -43,6 +46,8 @@ const mockSummaries: CategorySummary[] = CATEGORIES.map((c) => {
   };
 });
 
+// ── Page ─────────────────────────────────────────────────────────────────────
+
 type View = "dashboard" | "add" | "budgets";
 
 export default function Home() {
@@ -52,6 +57,7 @@ export default function Home() {
     <main className="min-h-screen bg-paper">
       <Header view={view} onNavigate={setView} />
 
+      {/* ── Dashboard ───────────────────────────────────────────────────── */}
       {view === "dashboard" && (
         <PageWrapper>
           <StatsRow
@@ -62,6 +68,7 @@ export default function Home() {
             incomeCount={2}
             expenseCount={7}
           />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <SpendingCard
               categorySpend={mockSpend}
@@ -72,6 +79,7 @@ export default function Home() {
               onEditBudgets={() => setView("budgets")}
             />
           </div>
+
           <TransactionList
             transactions={mockTransactions}
             onDelete={(id) => console.log("delete", id)}
@@ -80,6 +88,7 @@ export default function Home() {
         </PageWrapper>
       )}
 
+      {/* ── Add Transaction ─────────────────────────────────────────────── */}
       {view === "add" && (
         <PageWrapper narrow>
           <AddTransactionForm
@@ -89,9 +98,15 @@ export default function Home() {
         </PageWrapper>
       )}
 
+      {/* ── Budget Manager ──────────────────────────────────────────────── */}
       {view === "budgets" && (
         <PageWrapper narrow>
-          <p className="text-muted text-sm">Budgets coming soon</p>
+          <BudgetManager
+            summaries={mockSummaries}
+            budgets={DEFAULT_BUDGETS}
+            onSave={(b) => console.log("save budgets", b)}
+            onBack={() => setView("dashboard")}
+          />
         </PageWrapper>
       )}
     </main>
