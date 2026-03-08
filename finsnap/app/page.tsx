@@ -6,8 +6,20 @@ import { PageWrapper } from "@/components/finance/PageWrapper";
 import { StatsRow } from "@/components/finance/StatsRow";
 import { SpendingCard } from "@/components/finance/SpendingCard";
 import { BudgetHealthCard } from "@/components/finance/BudgetHealthCard";
+import { TransactionList } from "@/components/finance/TransactionList";
 import { CATEGORIES, DEFAULT_BUDGETS } from "@/lib/constants";
-import type { CategorySummary } from "@/types/finance";
+import type { CategorySummary, Transaction } from "@/types/finance";
+
+const mockTransactions: Transaction[] = [
+  { id: "1", type: "income",  category: null,            amount: 4200, description: "Salary",          date: "2026-03-01" },
+  { id: "2", type: "income",  category: null,            amount: 800,  description: "Freelance Project", date: "2026-03-05" },
+  { id: "3", type: "expense", category: "housing",       amount: 1400, description: "Monthly Rent",      date: "2026-03-01" },
+  { id: "4", type: "expense", category: "food",          amount: 85,   description: "Grocery Run",        date: "2026-03-02" },
+  { id: "5", type: "expense", category: "food",          amount: 120,  description: "Restaurant Dinner",  date: "2026-03-05" },
+  { id: "6", type: "expense", category: "transport",     amount: 55,   description: "Fuel",               date: "2026-03-03" },
+  { id: "7", type: "expense", category: "health",        amount: 30,   description: "Pharmacy",           date: "2026-03-05" },
+  { id: "8", type: "expense", category: "entertainment", amount: 45,   description: "Netflix & Spotify",  date: "2026-03-04" },
+];
 
 const mockSpend: Record<string, number> = {
   housing: 1400,
@@ -49,7 +61,6 @@ export default function Home() {
             incomeCount={2}
             expenseCount={7}
           />
-          {/* Two column grid */}
           <div className="grid grid-cols-2 gap-4 mt-4">
             <SpendingCard
               categorySpend={mockSpend}
@@ -60,6 +71,11 @@ export default function Home() {
               onEditBudgets={() => setView("budgets")}
             />
           </div>
+          <TransactionList
+            transactions={mockTransactions}
+            onDelete={(id) => console.log("delete", id)}
+            onAdd={() => setView("add")}
+          />
         </PageWrapper>
       )}
 
