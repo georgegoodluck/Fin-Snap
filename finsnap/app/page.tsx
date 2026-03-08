@@ -9,16 +9,17 @@ import { BudgetHealthCard } from "@/components/finance/BudgetHealthCard";
 import { TransactionList } from "@/components/finance/TransactionList";
 import { CATEGORIES, DEFAULT_BUDGETS } from "@/lib/constants";
 import type { CategorySummary, Transaction } from "@/types/finance";
+import { AddTransactionForm } from "@/components/finance/AddTransactionForm";
 
 const mockTransactions: Transaction[] = [
-  { id: "1", type: "income",  category: null,            amount: 4200, description: "Salary",          date: "2026-03-01" },
-  { id: "2", type: "income",  category: null,            amount: 800,  description: "Freelance Project", date: "2026-03-05" },
-  { id: "3", type: "expense", category: "housing",       amount: 1400, description: "Monthly Rent",      date: "2026-03-01" },
-  { id: "4", type: "expense", category: "food",          amount: 85,   description: "Grocery Run",        date: "2026-03-02" },
-  { id: "5", type: "expense", category: "food",          amount: 120,  description: "Restaurant Dinner",  date: "2026-03-05" },
-  { id: "6", type: "expense", category: "transport",     amount: 55,   description: "Fuel",               date: "2026-03-03" },
-  { id: "7", type: "expense", category: "health",        amount: 30,   description: "Pharmacy",           date: "2026-03-05" },
-  { id: "8", type: "expense", category: "entertainment", amount: 45,   description: "Netflix & Spotify",  date: "2026-03-04" },
+  { id: "1", type: "income", category: null, amount: 4200, description: "Salary", date: "2026-03-01" },
+  { id: "2", type: "income", category: null, amount: 800, description: "Freelance Project", date: "2026-03-05" },
+  { id: "3", type: "expense", category: "housing", amount: 1400, description: "Monthly Rent", date: "2026-03-01" },
+  { id: "4", type: "expense", category: "food", amount: 85, description: "Grocery Run", date: "2026-03-02" },
+  { id: "5", type: "expense", category: "food", amount: 120, description: "Restaurant Dinner", date: "2026-03-05" },
+  { id: "6", type: "expense", category: "transport", amount: 55, description: "Fuel", date: "2026-03-03" },
+  { id: "7", type: "expense", category: "health", amount: 30, description: "Pharmacy", date: "2026-03-05" },
+  { id: "8", type: "expense", category: "entertainment", amount: 45, description: "Netflix & Spotify", date: "2026-03-04" },
 ];
 
 const mockSpend: Record<string, number> = {
@@ -81,7 +82,10 @@ export default function Home() {
 
       {view === "add" && (
         <PageWrapper narrow>
-          <p className="text-muted text-sm">Add transaction coming soon</p>
+          <AddTransactionForm
+            onAdd={(txn) => console.log("add", txn)}
+            onBack={() => setView("dashboard")}
+          />
         </PageWrapper>
       )}
 
