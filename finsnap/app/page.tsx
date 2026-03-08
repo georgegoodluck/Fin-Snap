@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Header from "@/components/finance/Header";
+import { Header } from "@/components/finance/Header";
 import { PageWrapper } from "@/components/finance/PageWrapper";
 import { StatsRow } from "@/components/finance/StatsRow";
 import { SpendingCard } from "@/components/finance/SpendingCard";

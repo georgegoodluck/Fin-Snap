@@ -1,46 +1,96 @@
 "use client";
 
-type View = 'dashboard' | 'add' | 'budgets';
+import { useState } from "react";
+
+type View = "dashboard" | "add" | "budgets";
+
 interface HeaderProps {
-    view: View; // Current active view
-    onNavigate: (view: View) => void; // Function to handle navigation
+  view: View;
+  onNavigate: (view: View) => void;
 }
 
-const navItems: { label: string, view: View }[] = [
-    { label: 'Overview', view: 'dashboard' }, // Object 1
-    { label: '+ Add', view: 'add' }, // Object 2
-    { label: 'Budgets', view: 'budgets' }, // Object 3
-]
+const navItems: { label: string; view: View }[] = [
+  { label: "Overview", view: "dashboard" },
+  { label: "+ Add",    view: "add"       },
+  { label: "Budgets",  view: "budgets"   },
+];
 
-const Header = ({ view, onNavigate }: HeaderProps) => {
-    return (
-        <header className="sticky top-0 z-50 h-14 px-6 flex items-center justify-between bg-ink">
-            {/* Logo */}
-            <div className="font-display text-3xl text-paper tracking-tight flex items-center">
-                Fin<span className="text-warning text-sm align-middle">&bull;</span>Snap
-            </div>
+export function Header({ view, onNavigate }: HeaderProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
 
-            {/* Nav */}
-            <nav className="flex gap-1">
-                {navItems.map((item) => (
-                    <button
-                        key={item.view}
-                        onClick={() => onNavigate(item.view)}
-                        className={`
-              px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200
-              ${view === item.view
-                                ? "bg-warning text-ink"
-                                : "text-muted hover:text-paper"
-                            }
-            `}
-                    >
-                        {item.label}
-                    </button>
-                ))}
-            </nav>
+  const handleNavigate = (v: View) => {
+    onNavigate(v);
+    setMenuOpen(false);
+  };
 
-        </header >
-    )
+  return (
+    <header className="sticky top-0 z-50 bg-ink">
+      <div className="px-6 h-14 flex items-center justify-between">
+        {/* Logo */}
+        <div className="font-display text-xl text-paper tracking-tight">
+          fin<span className="text-warning">·</span>snap
+        </div>
+
+        {/* Desktop nav */}
+        <nav className="hidden md:flex gap-1">
+          {navItems.map((item) => (
+            <button
+              key={item.view}
+              onClick={() => handleNavigate(item.view)}
+              className={`
+                px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200
+                ${view === item.view
+                  ? "bg-warning text-ink"
+                  : "text-muted hover:text-paper"
+                }
+              `}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Mobile hamburger */}
+        <button
+          onClick={() => setMenuOpen((o) => !o)}
+          className="md:hidden flex flex-col gap-1.5 p-2 -mr-2"
+          aria-label="Toggle menu"
+        >
+          <span className={`block w-5 h-0.5 bg-paper rounded-full transition-all duration-300
+            ${menuOpen ? "rotate-45 translate-y-2" : ""}`}
+          />
+          <span className={`block w-5 h-0.5 bg-paper rounded-full transition-all duration-300
+            ${menuOpen ? "opacity-0" : ""}`}
+          />
+          <span className={`block w-5 h-0.5 bg-paper rounded-full transition-all duration-300
+            ${menuOpen ? "-rotate-45 -translate-y-2" : ""}`}
+          />
+        </button>
+      </div>
+
+      {/* Mobile dropdown */}
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out
+        ${menuOpen ? "max-h-48" : "max-h-0"}`}
+      >
+        <nav className="px-4 pb-4 flex flex-col gap-1">
+          {navItems.map((item) => (
+            <button
+              key={item.view}
+              onClick={() => handleNavigate(item.view)}
+              className={`
+                w-full text-left px-4 py-2.5 rounded-xl text-sm font-medium
+                transition-all duration-200
+                ${view === item.view
+                  ? "bg-warning text-ink"
+                  : "text-muted hover:text-paper hover:bg-white/5"
+                }
+              `}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
 }
-
-export default Header
