@@ -61,7 +61,7 @@ export default function Home() {
             incomeCount={2}
             expenseCount={7}
           />
-          <div className="grid grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <SpendingCard
               categorySpend={mockSpend}
               total={1735}

@@ -25,10 +25,13 @@ export function SpendingCard({ categorySpend, total }: SpendingCardProps) {
 
   return (
     <div className="bg-card border border-border rounded-2xl p-5">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-muted block mb-4">
+      <span className="text-[10px] font-semibold uppercase tracking-widest
+                       text-muted block mb-4">
         Spending by Category
       </span>
-      <div className="flex items-center gap-6">
+
+      {/* Stack vertically on mobile, side by side on md+ */}
+      <div className="flex flex-col md:flex-row items-center gap-6">
         <DonutChart segments={segments} total={total} />
         <SpendingLegend items={legendItems} />
       </div>
