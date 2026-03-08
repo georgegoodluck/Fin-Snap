@@ -9,6 +9,12 @@ interface DonutChartProps {
   total: number;
 }
 
+interface RenderedSegment extends Segment {
+  dash: number;
+  gap: number;
+  offset: number;
+}
+
 const SIZE = 160;
 const CX = 80;
 const CY = 80;
@@ -20,7 +26,10 @@ export function DonutChart({ segments, total }: DonutChartProps) {
   // Empty state
   if (total === 0) {
     return (
-      <div className="flex items-center justify-center" style={{ width: SIZE, height: SIZE }}>
+      <div
+        className="flex items-center justify-center"
+        style={{ width: SIZE, height: SIZE }}
+      >
         <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`}>
           <circle
             cx={CX} cy={CY} r={RADIUS}
@@ -42,24 +51,23 @@ export function DonutChart({ segments, total }: DonutChartProps) {
     );
   }
 
-  // Build segments with cumulative offset
-  let accumulated = 0;
-
+  // Build segments with cumulative offset — no mutation
   const renderedSegments = segments
     .filter((s) => s.value > 0)
-    .map((seg) => {
+    .reduce<RenderedSegment[]>((acc, seg) => {
+      const accumulatedPct = acc.reduce((sum, s) => sum + s.value / total, 0);
       const pct = seg.value / total;
       const dash = pct * CIRCUMFERENCE;
       const gap = CIRCUMFERENCE - dash;
-      const offset = -accumulated * CIRCUMFERENCE;
-      accumulated += pct;
-
-      return { ...seg, dash, gap, offset };
-    });
+      const offset = -accumulatedPct * CIRCUMFERENCE;
+      return [...acc, { ...seg, dash, gap, offset }];
+    }, []);
 
   return (
-    <div className="relative flex-shrink-0" style={{ width: SIZE, height: SIZE }}>
-      {/* Chart */}
+    <div
+      className="relative flex-shrink-0"
+      style={{ width: SIZE, height: SIZE }}
+    >
       <svg
         width={SIZE}
         height={SIZE}
@@ -69,9 +77,7 @@ export function DonutChart({ segments, total }: DonutChartProps) {
         {renderedSegments.map((seg, i) => (
           <circle
             key={i}
-            cx={CX}
-            cy={CY}
-            r={RADIUS}
+            cx={CX} cy={CY} r={RADIUS}
             fill="none"
             stroke={seg.color}
             strokeWidth={STROKE_WIDTH}
@@ -81,7 +87,7 @@ export function DonutChart({ segments, total }: DonutChartProps) {
           />
         ))}
 
-        {/* Inner hole — sits on top, hides the overlapping strokes */}
+        {/* Inner hole */}
         <circle
           cx={CX} cy={CY}
           r={RADIUS - STROKE_WIDTH / 2 - 1}
@@ -89,7 +95,7 @@ export function DonutChart({ segments, total }: DonutChartProps) {
         />
       </svg>
 
-      {/* Center label — absolutely positioned over the SVG */}
+      {/* Center label */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-[10px] font-semibold uppercase tracking-widest text-muted">
           Total
