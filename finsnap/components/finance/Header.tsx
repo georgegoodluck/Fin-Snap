@@ -28,7 +28,7 @@ const Header = ({ view, onNavigate }: HeaderProps) => {
                         onClick={() => onNavigate(item.view)}
                         className={`
                             text-white px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200
-                        ${view === item.view ? 'bg-red' : 'bg-green'}
+                        ${view === item.view ? 'bg-warning text-ink' : 'text-muted hover:text-paper'}
                         `}
                     >
                         {item.label}
