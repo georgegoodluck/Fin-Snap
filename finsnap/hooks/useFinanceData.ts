@@ -2,29 +2,25 @@ import { useState, useEffect, useMemo } from "react";
 import type { Transaction, BudgetMap, FinanceStore } from "@/types/finance";
 import { CATEGORIES, DEFAULT_BUDGETS, STORAGE_KEY } from "@/lib/constants";
 
-// ── Persistence ──────────────────────────────────────────────────────────────
+const EMPTY_STORE: FinanceStore = {
+  transactions: [],
+  budgets: DEFAULT_BUDGETS,
+};
 
 function loadStore(): FinanceStore {
-  if (typeof window === "undefined") {
-    return { transactions: [], budgets: DEFAULT_BUDGETS };
-  }
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { transactions: [], budgets: DEFAULT_BUDGETS };
+    return raw ? JSON.parse(raw) : EMPTY_STORE;
   } catch {
-    return { transactions: [], budgets: DEFAULT_BUDGETS };
+    return EMPTY_STORE;
   }
 }
 
 function saveStore(store: FinanceStore): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-  } catch {
-    // localStorage unavailable — fail silently
-  }
+  } catch {}
 }
-
-// ── Derived Data ─────────────────────────────────────────────────────────────
 
 function filterByMonth(transactions: Transaction[], month: string): Transaction[] {
   return transactions.filter((t) => t.date.startsWith(month));
@@ -42,19 +38,30 @@ function calcExpenses(transactions: Transaction[]): number {
     .reduce((sum, t) => sum + t.amount, 0);
 }
 
-// ── Hook ─────────────────────────────────────────────────────────────────────
+interface StoreState {
+  data: FinanceStore;
+  hydrated: boolean;
+}
 
 export function useFinanceData(activeMonth: string) {
-  const [store, setStore] = useState<FinanceStore>(loadStore);
+  const [state, setState] = useState<StoreState>({
+    data: EMPTY_STORE,
+    hydrated: false,
+  });
 
-  // Persist on every change
+  // Single setState call — loads localStorage and marks hydrated together
   useEffect(() => {
-    saveStore(store);
-  }, [store]);
+    setState({ data: loadStore(), hydrated: true });
+  }, []);
 
-  // All derived values — only recalculates when store or month changes
+  // Persist on every change after hydration
+  useEffect(() => {
+    if (!state.hydrated) return;
+    saveStore(state.data);
+  }, [state]);
+
   const derived = useMemo(() => {
-    const monthTxns = filterByMonth(store.transactions, activeMonth);
+    const monthTxns = filterByMonth(state.data.transactions, activeMonth);
     const income = calcIncome(monthTxns);
     const expenses = calcExpenses(monthTxns);
     const savings = income - expenses;
@@ -69,7 +76,7 @@ export function useFinanceData(activeMonth: string) {
 
     const categorySummaries = CATEGORIES.map((c) => {
       const spent = categorySpend[c.id];
-      const budget = store.budgets[c.id] ?? 0;
+      const budget = state.data.budgets[c.id] ?? 0;
       const remaining = budget - spent;
       return {
         ...c,
@@ -92,34 +99,36 @@ export function useFinanceData(activeMonth: string) {
       incomeCount: monthTxns.filter((t) => t.type === "income").length,
       expenseCount: monthTxns.filter((t) => t.type === "expense").length,
     };
-  }, [store, activeMonth]);
-
-  // ── Actions ────────────────────────────────────────────────────────────────
+  }, [state.data, activeMonth]);
 
   const addTransaction = (txn: Omit<Transaction, "id">) => {
-    setStore((s) => ({
+    setState((s) => ({
       ...s,
-      transactions: [
-        { ...txn, id: crypto.randomUUID() },
-        ...s.transactions,
-      ],
+      data: {
+        ...s.data,
+        transactions: [{ ...txn, id: crypto.randomUUID() }, ...s.data.transactions],
+      },
     }));
   };
 
   const deleteTransaction = (id: string) => {
-    setStore((s) => ({
+    setState((s) => ({
       ...s,
-      transactions: s.transactions.filter((t) => t.id !== id),
+      data: {
+        ...s.data,
+        transactions: s.data.transactions.filter((t) => t.id !== id),
+      },
     }));
   };
 
   const updateBudgets = (budgets: BudgetMap) => {
-    setStore((s) => ({ ...s, budgets }));
+    setState((s) => ({ ...s, data: { ...s.data, budgets } }));
   };
 
   return {
-    store,
+    store: state.data,
     derived,
+    hydrated: state.hydrated,
     addTransaction,
     deleteTransaction,
     updateBudgets,

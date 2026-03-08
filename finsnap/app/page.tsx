@@ -17,7 +17,7 @@ export default function Home() {
   const [view, setView] = useState<View>("dashboard");
   const [activeMonth] = useState("2026-03");
 
-  const { store, derived, addTransaction, deleteTransaction, updateBudgets } =
+  const { store, derived, hydrated, addTransaction, deleteTransaction, updateBudgets } =
     useFinanceData(activeMonth);
 
   const handleAdd = (txn: Parameters<typeof addTransaction>[0]) => {
@@ -30,11 +30,22 @@ export default function Home() {
     setView("dashboard");
   };
 
+  if (!hydrated) {
+    return (
+      <main className="min-h-screen bg-paper">
+        <Header view={view} onNavigate={setView} />
+        <div className="flex items-center justify-center h-64">
+          <span className="text-sm text-muted">Loading...</span>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-paper">
       <Header view={view} onNavigate={setView} />
 
-      {/*  Dashboard  */}
+      {/* ── Dashboard ───── */}
       {view === "dashboard" && (
         <PageWrapper>
           <StatsRow
@@ -65,7 +76,7 @@ export default function Home() {
         </PageWrapper>
       )}
 
-      {/*  Add Transaction  */}
+      {/* Add Transaction */}
       {view === "add" && (
         <PageWrapper narrow>
           <AddTransactionForm
@@ -75,7 +86,7 @@ export default function Home() {
         </PageWrapper>
       )}
 
-      {/*  Budget Manager  */}
+      {/* Budget Manager  */}
       {view === "budgets" && (
         <PageWrapper narrow>
           <BudgetManager
