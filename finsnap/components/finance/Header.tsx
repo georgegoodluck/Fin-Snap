@@ -28,7 +28,7 @@ export function Header({ view, onNavigate }: HeaderProps) {
       <div className="px-6 h-14 flex items-center justify-between">
         {/* Logo */}
         <div className="font-display text-xl text-paper tracking-tight">
-          fin<span className="text-warning">·</span>snap
+          Fin<span className="text-warning">·</span>Snap
         </div>
 
         {/* Desktop nav */}
