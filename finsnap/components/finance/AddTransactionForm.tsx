@@ -112,7 +112,7 @@ export function AddTransactionForm({ onAdd, onBack }: AddTransactionFormProps) {
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 font-display
                              text-xl font-bold text-muted">
-              $
+              ₦
             </span>
             <input
               type="number"

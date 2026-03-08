@@ -101,9 +101,9 @@ export function DonutChart({ segments, total }: DonutChartProps) {
           Total
         </span>
         <span className="font-display text-lg font-bold text-ink leading-tight">
-          {new Intl.NumberFormat("en-US", {
+          {new Intl.NumberFormat("en-NG", {
             style: "currency",
-            currency: "USD",
+            currency: "NGN",
             maximumFractionDigits: 0,
           }).format(total)}
         </span>

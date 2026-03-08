@@ -126,7 +126,7 @@ export function BudgetManager({
                   <div className="relative flex-shrink-0">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2
                                      text-sm font-bold text-muted">
-                      $
+                      ₦
                     </span>
                     <input
                       type="number"
@@ -166,7 +166,7 @@ export function BudgetManager({
 
               {/* Bar scale labels */}
               <div className="flex justify-between mt-1.5">
-                <span className="text-[10px] text-muted">$0</span>
+                <span className="text-[10px] text-muted">₦0</span>
                 <span className="text-[10px] text-muted font-semibold">
                   {Math.min(
                     budgetValue > 0

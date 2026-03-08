@@ -48,7 +48,7 @@ export function BudgetRow({ summary }: BudgetRowProps) {
 
       {/* Bottom — remaining label */}
       <div className="flex justify-between">
-        <span className="text-[10px] text-muted">$0</span>
+        <span className="text-[10px] text-muted">₦0</span>
         <span className={`text-[10px] font-medium
                           ${isOver ? "text-expense" : "text-muted"}`}>
           {isOver
