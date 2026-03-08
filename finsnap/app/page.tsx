@@ -5,6 +5,7 @@ import Header from "@/components/finance/Header";
 import { PageWrapper } from "@/components/finance/PageWrapper";
 import { StatsRow } from "@/components/finance/StatsRow";
 import { SpendingCard } from "@/components/finance/SpendingCard";
+import { BudgetHealthCard } from "@/components/finance/BudgetHealthCard";
 import { CATEGORIES, DEFAULT_BUDGETS } from "@/lib/constants";
 import type { CategorySummary } from "@/types/finance";
 
@@ -48,10 +49,17 @@ export default function Home() {
             incomeCount={2}
             expenseCount={7}
           />
-          <SpendingCard
-            categorySpend={mockSpend}
-            total={1735}
-          />
+          {/* Two column grid */}
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <SpendingCard
+              categorySpend={mockSpend}
+              total={1735}
+            />
+            <BudgetHealthCard
+              summaries={mockSummaries}
+              onEditBudgets={() => setView("budgets")}
+            />
+          </div>
         </PageWrapper>
       )}
 
