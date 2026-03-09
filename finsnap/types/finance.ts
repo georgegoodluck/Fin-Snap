@@ -1,4 +1,4 @@
-// TRansaction types and interfaces for the finance module
+// Transaction types and interfaces for the finance module
 export type TransactionType = "income" | "expense";
 
 // Categories for transactions
